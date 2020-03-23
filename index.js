@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import express from 'express';
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import { GraphQLDate, GraphQLDateTime, GraphQLTime } from 'graphql-iso-date';
+import depthLimit from 'graphql-depth-limit';
 import { permissions } from './auth.api';
 import { validators } from './auth.validator';
 
@@ -55,6 +56,8 @@ const schemaWithMiddleware = applyMiddleware(
 // Build Apollo server
 const apolloServer = new ApolloServer({
   schemaWithMiddleware,
+  introspection: false,
+  validationRules: [depthLimit(5)],
 
   context: ({ req, res }) => {
     const context = {};
