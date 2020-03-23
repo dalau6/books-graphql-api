@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import express from 'express';
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import { GraphQLDate, GraphQLDateTime, GraphQLTime } from 'graphql-iso-date';
+import { permissions } from './auth.api';
 
 const port = process.env.PORT || 8080;
 
@@ -44,6 +45,10 @@ const app = express();
 
 // Build GraphQL schema based on SDL definitions and resolvers maps
 const schema = makeExecutableSchema({ typeDefs, resolvers });
+const schemaWithMiddleware = applyMiddleware(
+  schema,
+  shield(permissions, { allowExternalErrors: true })
+);
 
 // Build Apollo server
 const apolloServer = new ApolloServer({
