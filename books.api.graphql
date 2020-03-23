@@ -1,0 +1,33 @@
+extend type Query {
+  books: [Book!]!
+  ...
+}
+
+extend type Mutation {
+  ...
+}
+
+type Book {
+  id: ID!
+  creator: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  authors: [Author!]!
+  title: String!
+  about: String
+  language: String
+  genre: String
+  isbn13: String
+  isbn10: String
+  publisher: String
+  publishDate: Date
+  hardcover: Int
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  fullName: String!
+  email: String!
+}
