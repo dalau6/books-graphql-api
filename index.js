@@ -1,11 +1,16 @@
 import gql from 'graphql-tag';
 import express from 'express';
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
+import { GraphQLDate, GraphQLDateTime, GraphQLTime } from 'graphql-iso-date';
 
 const port = process.env.PORT || 8080;
 
 // Define APIs using GraphQL SDL
 const typeDefs = gql`
+  scalar Date
+  scalar Time
+  scalar DateTime
+
   type Query {
     sayHello(name: String!): String!
   }
@@ -17,6 +22,10 @@ const typeDefs = gql`
 
 // Define resolvers map for API definitions in SDL
 const resolvers = {
+  Date: GraphQLDate,
+  Time: GraphQLTime,
+  DateTime: GraphQLDateTime,
+
   Query: {
     sayHello: (obj, args, context, info) => {
       return `Hello ${args.name}!`;
