@@ -3,6 +3,7 @@ import express from 'express';
 import { ApolloServer, makeExecutableSchema } from 'apollo-server-express';
 import { GraphQLDate, GraphQLDateTime, GraphQLTime } from 'graphql-iso-date';
 import { permissions } from './auth.api';
+import { validators } from './auth.validator';
 
 const port = process.env.PORT || 8080;
 
@@ -47,12 +48,13 @@ const app = express();
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schemaWithMiddleware = applyMiddleware(
   schema,
+  validators,
   shield(permissions, { allowExternalErrors: true })
 );
 
 // Build Apollo server
 const apolloServer = new ApolloServer({
-  schema,
+  schemaWithMiddleware,
 
   context: ({ req, res }) => {
     const context = {};
